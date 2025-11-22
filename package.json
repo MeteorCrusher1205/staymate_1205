@@ -1,0 +1,28 @@
+{
+  "name": "staymate",
+  "version": "1.0.0",
+  "description": "This website is for Hostel boys/girls where they can see all the flats/PG on this website",
+  "repository": {
+    "type": "git",
+    "url": "Staymate"
+  },
+  "license": "ISC",
+  "author": "MeteorCrusher1205",
+  "type": "commonjs",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "app": "^0.1.0",
+    "dotenv": "^17.1.0",
+    "express": "^5.1.0",
+    "git": "^0.1.5",
+    "mongoose": "^8.16.2",
+    "multer": "^2.0.1",
+    "node": "^22.17.0",
+    "nodemon": "^3.1.10",
+    "path": "^0.12.7"
+  }
+}

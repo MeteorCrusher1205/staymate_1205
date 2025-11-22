@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>StayMate | Login</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>body { font-family: 'Inter', sans-serif; }</style>
+</head>
+<body class="bg-gradient-to-r from-blue-100 via-indigo-200 to-purple-100 min-h-screen flex items-center justify-center">
+
+  <div class="bg-white/90 backdrop-blur-md rounded-3xl shadow-2xl p-10 w-full max-w-md">
+    <h2 class="text-4xl font-extrabold text-center text-blue-800 mb-6">Welcome Back</h2>
+    <p class="text-center text-gray-600 mb-8">Login to manage your flats or find your perfect stay.</p>
+
+    <form>
+      <div class="mb-5">
+        <label for="email" class="block text-gray-700 font-semibold mb-2">Email</label>
+        <input type="email" id="email" placeholder="Enter your email"
+          class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition"/>
+      </div>
+
+      <div class="mb-6">
+        <label for="password" class="block text-gray-700 font-semibold mb-2">Password</label>
+        <input type="password" id="password" placeholder="Enter your password"
+          class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition"/>
+      </div>
+
+      <button type="submit"
+        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl shadow-lg transition duration-300">
+        Login
+      </button>
+    </form>
+
+    <p class="mt-6 text-sm text-center text-gray-600">
+      Don't have an account?
+      <a href="signup.html" class="text-purple-600 hover:underline font-semibold">Sign up</a>
+    </p>
+  </div>
+
+  <script>
+    document.querySelector('form').addEventListener('submit', function(event) {
+      event.preventDefault(); // Prevent form reload
+
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.message === 'Login successful') {
+          alert('Login successful!');
+          localStorage.setItem("userRole", data.role);
+          localStorage.setItem("userId", data.user.id);
+          window.location.href = data.redirectUrl;
+        } else {
+          alert('Login failed: ' + data.message);
+        }
+      })
+      .catch(err => {
+        console.error('Error:', err);
+        alert('An error occurred while logging in.');
+      });
+    });
+  </script>
+
+</body>
+</html>

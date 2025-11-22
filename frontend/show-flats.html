@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Flats</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-r from-blue-100 via-indigo-200 to-purple-100 min-h-screen text-gray-800">
+
+  <!-- Navbar -->
+    <header class="bg-white shadow-md p-6 sticky  mb-6 top-0 z-10 flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-0 rounded-b-xl">
+    <h1 class="text-3xl font-bold text-purple-700 tracking-wide">🏠 My Flats</h1>
+    <div class="flex items-center gap-4">
+      <a href="./owner_dash.html" class="text-purple-600 hover:text-purple-800 font-medium transition">Add Flats</a>
+      <button onclick="logout()" class="text-red-600 hover:text-red-800 font-semibold transition">Logout</button>
+    </div>
+  </header>
+
+  <!-- Flats Container -->
+  <main class="max-w-6xl mx-auto px-4 space-y-8 pb-10">
+    <div id="flatsContainer" class="space-y-8"></div>
+  </main>
+
+  <script>
+    const userId = localStorage.getItem("userId");
+    if (!userId) {
+      alert("Please login first");
+      window.location.href = "/login.html";
+    }
+
+    function logout() {
+      localStorage.removeItem("userId");
+      window.location.href = "/login.html";
+    }
+
+    let flatsData = [];
+
+    async function loadFlats() {
+      try {
+        const res = await fetch(`/api/flats-details/owner/${userId}`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        flatsData = data;
+
+        const container = document.getElementById("flatsContainer");
+        container.innerHTML = "";
+
+        if (!data || data.length === 0) {
+          container.innerHTML = `<p class="text-center text-gray-700">No flats available.</p>`;
+          return;
+        }
+
+        data.forEach((flat, index) => {
+          const owner = flat.ownerId || {};
+          const images = flat.images?.map(path => path.replace(/\\/g, "/")) || [];
+          const imgSrc = images[0] || "https://via.placeholder.com/400x300?text=No+Image";
+
+          const card = document.createElement("div");
+          card.className = "flex flex-col md:flex-row bg-white shadow-md hover:shadow-lg transition duration-300 overflow-hidden rounded-xl";
+          card.dataset.images = JSON.stringify(images);
+          card.dataset.currentIndex = 0;
+
+          card.innerHTML = `
+            <!-- Image Section -->
+            <div class="md:w-1/3 w-full relative h-[300px] bg-gray-200 rounded-l-xl overflow-hidden">
+              <img id="flat-img-${index}" src="${imgSrc}" alt="Flat Image"
+                   class="w-full h-full object-cover transition">
+              <button onclick="prevImage(${index})"
+                      class="absolute left-3 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-70 hover:bg-opacity-100 text-purple-700 p-2 shadow rounded-xl transition duration-300">
+                &#10094;
+              </button>
+              <button onclick="nextImage(${index})"
+                      class="absolute right-3 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-70 hover:bg-opacity-100 text-purple-700 p-2 shadow rounded-xl transition duration-300">
+                &#10095;
+              </button>
+            </div>
+
+            <!-- Details Section -->
+            <div class="flex-1 p-6 flex flex-col justify-between bg-white rounded-r-xl">
+              <div>
+                <h2 class="text-2xl font-bold text-purple-700 mb-1">${owner.firstName ?? "Unknown"} ${owner.lastName ?? ""}</h2>
+                <p class="text-sm text-gray-700 mb-1"><strong>Email:</strong> ${owner.email ?? "N/A"}</p>
+                <p class="text-sm text-gray-700 mb-1"><strong>Flat Address:</strong> ${flat.flataddress}</p>
+                <p class="text-sm text-gray-700 mb-1"><strong>Rent:</strong> ₹ ${flat.rent} / month</p>
+              </div>
+              <div class="mt-5 flex flex-col sm:flex-row gap-3">
+                <button class="flex-1 border border-purple-400 hover:bg-purple-100 text-purple-700 font-medium py-2 px-4 rounded-xl transition"
+                        onclick="previewFlat(${index})">
+                  Preview
+                </button>
+                <button class="flex-1 bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-xl transition"
+                        onclick="deleteFlat('${flat._id}', ${index})">
+                  Delete
+                </button>
+              </div>
+            </div>
+          `;
+
+          container.prepend(card);
+        });
+
+      } catch (err) {
+        console.error("Error fetching flats data:", err);
+        document.getElementById("flatsContainer").innerHTML = `<p class="text-center text-red-600">Failed to load flats.</p>`;
+      }
+    }
+
+    function previewFlat(index) {
+      const flat = flatsData[index];
+      alert(`Previewing flat at ${flat.flataddress} with rent ₹${flat.rent}`);
+    }
+
+    async function deleteFlat(flatId, index) {
+      if (!confirm("Are you sure you want to delete this flat?")) return;
+
+      try {
+        const res = await fetch(`/api/flats-details/delete/${flatId}`, {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ ownerId: userId })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          alert(data.message);
+          document.querySelectorAll("#flatsContainer > div")[index].remove();
+        } else {
+          alert(data.error || "Failed to delete flat");
+        }
+      } catch (err) {
+        console.error("Delete Error:", err);
+        alert("Error deleting flat");
+      }
+    }
+
+    function prevImage(index) {
+      const card = document.querySelectorAll("#flatsContainer > div")[index];
+      const images = JSON.parse(card.dataset.images);
+      let currentIndex = parseInt(card.dataset.currentIndex);
+      currentIndex = (currentIndex - 1 + images.length) % images.length;
+      document.getElementById(`flat-img-${index}`).src = images[currentIndex] || "https://via.placeholder.com/400x300?text=No+Image";
+      card.dataset.currentIndex = currentIndex;
+    }
+
+    function nextImage(index) {
+      const card = document.querySelectorAll("#flatsContainer > div")[index];
+      const images = JSON.parse(card.dataset.images);
+      let currentIndex = parseInt(card.dataset.currentIndex);
+      currentIndex = (currentIndex + 1) % images.length;
+      document.getElementById(`flat-img-${index}`).src = images[currentIndex] || "https://via.placeholder.com/400x300?text=No+Image";
+      card.dataset.currentIndex = currentIndex;
+    }
+
+    loadFlats();
+  </script>
+</body>
+
+
+</html>

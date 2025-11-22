@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StayMate</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+  </style>
+</head>
+<body class="bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 min-h-screen flex flex-col">
+
+  <!-- Navbar -->
+  <nav class="flex justify-between items-center py-6 px-12 bg-white/90 backdrop-blur-md shadow-md sticky top-0 z-50">
+    <h1 class="text-2xl font-extrabold text-blue-800">StayMate</h1>
+    <div class="space-x-6">
+      <a href="login.html" class="px-6 py-2 text-blue-700 font-semibold hover:text-white hover:bg-blue-700 rounded-lg transition">Login</a>
+      <a href="signup.html" class="px-6 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition">Signup</a>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="flex flex-col-reverse lg:flex-row items-center justify-between max-w-7xl mx-auto px-6 py-20 gap-10">
+    
+    <!-- Text Content -->
+    <div class="flex-1 space-y-6">
+      <h1 class="text-5xl lg:text-6xl font-extrabold text-blue-800 leading-tight">Find Your Perfect Stay with <span class="text-purple-600">StayMate</span></h1>
+      <p class="text-gray-700 text-lg lg:text-xl">Easily list your flats, manage your rentals, or find the ideal flat to call home. StayMate makes renting effortless and reliable.</p>
+      <div class="flex gap-6 mt-6">
+        <a href="signup.html" class="px-8 py-4 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-xl shadow-lg transition">Get Started</a>
+        <a href="login.html" class="px-8 py-4 border border-purple-600 text-purple-600 hover:bg-purple-600 hover:text-white font-semibold rounded-xl transition">Login</a>
+      </div>
+    </div>
+
+    <!-- Hero Image -->
+    <div class="flex-1">
+      <img src="./img/hero-img.png" alt="Flats Hero" class="rounded-3xl shadow-2xl w-full object-cover">
+    </div>
+
+  </section>
+
+  <!-- Features Section -->
+  <section class="max-w-6xl mx-auto px-6 py-20 grid grid-cols-1 md:grid-cols-3 gap-10">
+    <div class="bg-white rounded-2xl shadow-lg p-8 text-center hover:shadow-2xl transition">
+      <img src="./img/list-flat.png"/>
+      <h3 class="text-xl font-bold text-blue-800 mt-4">List Your Flat</h3>
+      <p class="text-gray-600 mt-2">Easily upload your flats with images, rent, and location to reach potential tenants instantly.</p>
+    </div>
+    <div class="bg-white rounded-2xl shadow-lg p-8 text-center hover:shadow-2xl transition">
+      <img src="./img/find.png"/>
+      <h3 class="text-xl font-bold text-blue-800 mt-4">Find Flats</h3>
+      <p class="text-gray-600 mt-2">Browse available flats in your preferred location and contact the owner directly through StayMate.</p>
+    </div>
+    <div class="bg-white rounded-2xl shadow-lg p-8 text-center hover:shadow-2xl transition">
+      <img src="./img/sec-rel.png"/>
+      <h3 class="text-xl font-bold text-blue-800 mt-4">Secure & Reliable</h3>
+      <p class="text-gray-600 mt-2">All listings are verified, and you can safely manage your rental transactions with ease.</p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-white/90 backdrop-blur-md shadow-inner py-6 mt-auto text-center text-gray-600">
+    &copy; 2025 StayMate. All rights reserved.
+  </footer>
+
+</body>
+</html>
