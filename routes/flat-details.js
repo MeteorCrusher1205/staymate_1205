@@ -3,12 +3,9 @@ const router = express.Router();
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
-const {
-  createFlat,
-  getAllFlats,
-  getFlatsByOwner,
-  deleteFlat,
-} = require("../controllers/flatController");
+const flatController = require("../controllers/flatController");
+const { createFlat, getAllFlats, getFlatsByOwner, deleteFlat } = flatController;
+
 
 // Ensure uploads folder exists
 const uploadDir = path.join(__dirname, "..", "uploads");
